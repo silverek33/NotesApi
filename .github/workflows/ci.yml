@@ -1,10 +1,11 @@
+
 name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch: {}
 
 permissions:
@@ -13,11 +14,12 @@ permissions:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-env:
+
+    env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
       DOTNET_NOLOGO: true
 
-steps:
+    steps:
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -41,16 +43,9 @@ steps:
             --collect:"XPlat Code Coverage" \
             --logger "trx;LogFileName=TestResults.trx"
 
-      - name: Debug
-Debug: list test outputs
-        if: always()
-        run: |
-          echo "=== Listing TestResults ==="
-          find ./TestResults -maxdepth 3 -type f -print
-
-      - name: Upload TestResults folder (TRX + coverage)
+      - name: Upload TestResults (TRX + coverage)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: testresults-and-          name: testresults-and-coverage
-
+          name: testresults-and-coverage
+         
