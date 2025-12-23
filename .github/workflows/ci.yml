@@ -32,6 +32,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
+      # (opcjonalnie) Cache NuGet — włącz po pierwszym zielonym buildzie
       # - name: Cache NuGet
       #   uses: actions/cache@v4
       #   with:
@@ -58,3 +59,19 @@ jobs:
           find ./TestResults -maxdepth 3 -type f -print
 
       - name: Upload test results (TRX)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-trx
+          path: |
+            TestResults/**/*.trx
+            TestResults/*.trx
+
+      - name      - name: Upload coverage (Cobertura)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-cobertura
+          path: |
+            TestResults/**/coverage.cobertura.xml
+
