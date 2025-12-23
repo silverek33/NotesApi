@@ -42,7 +42,8 @@ jobs:
             --collect:"XPlat Code Coverage" \
             --logger "trx;LogFileName=TestResults.trx"
 
-      - name: Debug: list test outputs
+      - name: Debug
+      Debug: list test outputs
         if: always()
         run: |
           echo "=== Listing TestResults ==="
