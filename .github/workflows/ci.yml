@@ -43,8 +43,22 @@ jobs:
       - name: Build (Release)
         run: dotnet build --configuration Release --no-restore
 
-      - name: Test (xUnit + coverage)
-        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --logger "trx;LogFileName=TestResults.trx"
+     
+   - name: Test (xUnit + coverage)
+        run: |
+          mkdir -p TestResults
+          dotnet test --configuration Release --no-build \
+            --results-directory ./TestResults \
+            --collect:"XPlat Code Coverage" \
+            --logger "trx;LogFileName=TestResults.trx"
+          # TRX => ./TestResults/TestResults.trx
+          # Coverage => ./TestResults/*/coverage.cobertura.xml lub ./TestResults/coverage.cobertura.xml)
+
+      - name: Debug: list test outputs (optional)
+        if: always()
+        run: |
+          echo "=== List TRX and coverage files ==="
+          find ./TestResults -maxdepth 3 -type f \( -name "*.trx" -o -name "coverage.cobertura.xml" \) -print
 
       - name: Upload test results (TRX)
         if: always()
@@ -52,7 +66,8 @@ jobs:
         with:
           name: test-results-trx
           path: |
-            **/TestResults/*/*.trx
+            TestResults/**/*.trx
+            TestResults/*.trx
 
       - name: Upload coverage (Cobertura)
         if: always()
@@ -60,4 +75,6 @@ jobs:
         with:
           name: coverage-cobertura
           path: |
-            **/TestResults/*/coverage.cobertura.xml
+            TestResults/**/coverage.cobertura.xml
+            TestResults/coverage.cobertura.xml
+``
