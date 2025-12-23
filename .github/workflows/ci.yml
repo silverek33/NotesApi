@@ -32,49 +32,29 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Cache NuGet
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            nuget-${{ runner.os }}-
+      # - name: Cache NuGet
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.nuget/packages
+      #     key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+      #     restore-keys: |
+      #       nuget-${{ runner.os }}-
 
       - name: Build (Release)
         run: dotnet build --configuration Release --no-restore
 
-     
-   - name: Test (xUnit + coverage)
+      - name: Test (xUnit + coverage)
         run: |
           mkdir -p TestResults
           dotnet test --configuration Release --no-build \
             --results-directory ./TestResults \
             --collect:"XPlat Code Coverage" \
             --logger "trx;LogFileName=TestResults.trx"
-          # TRX => ./TestResults/TestResults.trx
-          # Coverage => ./TestResults/*/coverage.cobertura.xml lub ./TestResults/coverage.cobertura.xml)
 
-      - name: Debug: list test outputs (optional)
+      - name: Debug: list test outputs
         if: always()
         run: |
-          echo "=== List TRX and coverage files ==="
-          find ./TestResults -maxdepth 3 -type f \( -name "*.trx" -o -name "coverage.cobertura.xml" \) -print
+          echo "=== Listing TestResults ==="
+          find ./TestResults -maxdepth 3 -type f -print
 
       - name: Upload test results (TRX)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-trx
-          path: |
-            TestResults/**/*.trx
-            TestResults/*.trx
-
-      - name: Upload coverage (Cobertura)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-cobertura
-          path: |
-            TestResults/**/coverage.cobertura.xml
-            TestResults/coverage.cobertura.xml
-``
