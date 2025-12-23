@@ -1,0 +1,13 @@
+
+# Created by dotnet new gitignore
+**/[Bb]in/
+**/[Oo]bj/
+**/*.user
+**/*.rsuser
+**/*.suo
+**/*.cache
+*.db
+*.sqlite
+*.sln.docstates
+.vscode/
+.idea/
