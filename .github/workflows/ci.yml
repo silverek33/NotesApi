@@ -13,12 +13,11 @@ permissions:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
-    env:
+env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
       DOTNET_NOLOGO: true
 
-    steps:
+steps:
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -43,7 +42,7 @@ jobs:
             --logger "trx;LogFileName=TestResults.trx"
 
       - name: Debug
-      Debug: list test outputs
+Debug: list test outputs
         if: always()
         run: |
           echo "=== Listing TestResults ==="
