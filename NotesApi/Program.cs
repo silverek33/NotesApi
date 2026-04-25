@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using NotesApi.Data;
 using NotesApi.Models;
 
-public partial class Program { }
 var builder = WebApplication.CreateBuilder(args);
 
 // === Services ===
@@ -85,3 +84,4 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+public partial class Program { }
